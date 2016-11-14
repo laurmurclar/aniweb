@@ -29,6 +29,7 @@ executable aniweb-exe
                      , aniweb
                      , scotty
                      , text
+                     , blaze-svg
   default-language:    Haskell2010
 
 test-suite aniweb-test
