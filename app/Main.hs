@@ -12,15 +12,14 @@ import Text.Blaze.Svg.Renderer.String (renderSvg)
 main = scotty 3000 $ do
   get "/:shape" $ do
     let a = renderSvg svgDoc
-    html $ pack a
+    html $ (append (append "<div class='hello' style='width: 100%; height: 100%;'>" (pack a)) "</div>")
 
 svgDoc :: S.Svg
-svgDoc = S.docTypeSvg ! A.version "1.1" ! A.width "150" ! A.height "100" ! A.viewbox "0 0 3 2" $ do
-  S.g ! A.transform makeTransform $ do
-    S.rect ! A.width "1" ! A.height "2" ! A.fill "#008d46"
-    S.rect ! A.width "1" ! A.height "2" ! A.fill "#ffffff"
-    S.rect ! A.width "1" ! A.height "2" ! A.fill "#d2232c"
-    S.path ! A.d makePath
+svgDoc = S.docTypeSvg ! A.version "1.1" ! A.width "100%" ! A.height "100%" ! A.viewbox "0 0 3 2" $ do
+  S.g $ do
+    S.rect ! A.width "10%" ! A.height "2" ! A.fill "#008d46" ! A.transform makeTransform
+    S.rect ! A.width "1" ! A.height "2" ! A.fill "#000000"
+    S.rect ! A.width "1" ! A.height "50%" ! A.fill "#d2232c"
 
 makePath :: S.AttributeValue
 makePath = mkPath $ do
@@ -28,4 +27,4 @@ makePath = mkPath $ do
   m 4 5
 
 makeTransform :: S.AttributeValue
-makeTransform = rotate 50
+makeTransform = rotate (- 50)
