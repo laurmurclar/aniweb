@@ -18,9 +18,7 @@ main = scotty 3000 $ do
 svgDoc :: S.Svg
 svgDoc = S.docTypeSvg `withAttributes` [(A.version "1.1"), (A.width "100%"), (A.height "100%"), (A.viewbox "0 0 3 2")] $ do
   S.g $ do
-    S.rect `withAttributes` ((style (Fill "#008d46")) ++ [(A.transform makeTransform)])
-    S.rect `withAttributes` (style (Fill "#000000"))
-    S.rect `withAttributes` (style ((Fill "#FF0000") *** (Stroke "#00FFFF")))
+    draw [(Rect, ((style (Fill "#008d46")) ++ [(A.transform makeTransform)])), (Rect, (style (Fill "#000000"))), (Rect, (style ((Fill "#FF0000") *** (Stroke "#00FFFF"))))]
 
 makePath :: S.AttributeValue
 makePath = mkPath $ do
@@ -54,3 +52,17 @@ styleR :: Style -> [Attribute] -> [Attribute]
 styleR (Fill c) xs = xs ++ [A.fill (stringValue c)]
 styleR (Stroke c) xs = xs ++ [A.stroke (stringValue c)]
 styleR (ComposeS s0 s1) xs = (styleR s1 (styleR s0 xs))
+
+type Drawing = [(Shape,[Attribute])]
+
+draw :: Drawing -> S.Svg
+draw [d] = shapeToDrawable d
+draw (d:ds) = shapeToDrawable d >> draw ds
+
+shapeToDrawable :: (Shape, [Attribute]) -> S.Svg
+shapeToDrawable (s, a) = (shape s) `withAttributes` a
+
+data Shape = Rect
+
+shape :: Shape -> S.Svg
+shape Rect = S.rect
