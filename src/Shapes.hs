@@ -30,6 +30,3 @@ shapeToDrawable (sh, st, tr) = shape sh `withAttributes` (style st ++ transform 
 withAttributes :: I.Attributable a => a -> [S.Attribute] -> a
 h `withAttributes` [] = h ! A.width "1" ! A.height "1"
 h `withAttributes` (x:xs) = (h ! x) `withAttributes` xs
-
-svgDoc :: S.Svg
-svgDoc = draw (read "[(Rect, Fill \"#FF0000\" :*** Stroke \"#00FF00\", Rotate 50.0 :<+> Scale 0.5)]")

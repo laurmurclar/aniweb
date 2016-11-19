@@ -1,0 +1,34 @@
+<html>
+  <head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+  </head>
+
+  <body>
+    <h3>How To Use:</h3>
+    <p>Enter a description and press enter to see it as an svg</p>
+
+    <h3>Suggested Inputs:</h3>
+    <p>[(Rect, Fill "#FF0000" :*** Stroke "#00FF00", Rotate 50.0 :<+> Scale 0.5)]</p>
+
+    <textarea cols=150 rows=3 style="margin: 20px;">
+    </textarea>
+
+    <div class="drawing" style="width: 1000px; height: 500px; border: solid 1px;">
+    </div>
+
+    <script>
+    $('textarea').on('keypress', function (e) {
+      if(e.which === 13){ // Enter
+        //Disable textbox to prevent multiple submit
+        $(this).attr('disabled', 'disabled');
+
+        // Post the description to the Shapes endpoint and draw the returned Svg
+        $.post('/shapes', { description: $('textarea').val() }, function (response) {
+          $('.drawing').html(response);
+          $('textarea').removeAttr('disabled');
+        });
+      }
+    });
+    </script>
+  </body>
+</html>

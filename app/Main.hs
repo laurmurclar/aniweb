@@ -1,13 +1,15 @@
 {-# LANGUAGE OverloadedStrings #-}
 
 import Shapes
-import Web.Scotty
+import Web.Scotty as W
 import Data.Text.Lazy (pack, append)
 import Text.Blaze.Svg.Renderer.String (renderSvg)
 
-main = scotty 3000 $
+main = scotty 3000 $ do
   get "/" $ do
-    let a = renderSvg svgDoc
-    html $ append (append "<div class='hello' style='width: 100%; height: 100%;'>" (pack a)) "</div>"
+    file "index.html"
 
--- TODO read it in from the webpage
+  post "/shapes" $ do
+    description <- param "description"
+    let svg = renderSvg (draw (read description))
+    html $ pack svg
