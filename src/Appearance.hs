@@ -7,8 +7,6 @@ import qualified Text.Blaze.Svg11.Attributes as A
 
 -- TODO revise if these would be better as diff types eg. Double
 -- TODO add more style options
--- TODO make strokewidth reasonable
--- TODO re-visit to make more similar to transforms
 data Style = IdentityS
         | Fill String
         | Stroke String

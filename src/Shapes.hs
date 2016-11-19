@@ -27,4 +27,4 @@ drawShapes [d] = shapeToDrawable d
 drawShapes (d:ds) = shapeToDrawable d >> drawShapes ds
 
 shapeToDrawable :: (Shape, Style, Transform) -> S.Svg
-shapeToDrawable (sh, st, tr) = shape sh ! A.width "1" ! A.height "1" ! style st ! transform tr
+shapeToDrawable (sh, st, tr) = shape sh ! customAttribute "vector-effect" "non-scaling-stroke" ! A.width "1" ! A.height "1" ! style st ! transform tr
