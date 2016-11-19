@@ -8,7 +8,7 @@ import qualified Text.Blaze.Svg11.Attributes as A
 
 -- TODO add more shapes
 data Shape = Rect
-              deriving Read
+              deriving (Read, Show)
 
 shape :: Shape -> S.Svg
 shape Rect = S.rect
@@ -25,7 +25,7 @@ drawShapes [d] = shapeToDrawable d
 drawShapes (d:ds) = shapeToDrawable d >> drawShapes ds
 
 shapeToDrawable :: (Shape, Style, Transform) -> S.Svg
-shapeToDrawable (sh, st, tr) = shape sh `withAttributes` (style st ++ transform tr)
+shapeToDrawable (sh, st, tr) = shape sh `withAttributes` (transform tr : style st)
 
 withAttributes :: I.Attributable a => a -> [S.Attribute] -> a
 h `withAttributes` [] = h ! A.width "1" ! A.height "1"

@@ -1,11 +1,13 @@
 {-# LANGUAGE OverloadedStrings #-}
 module Appearance where
 
+import Data.Monoid
 import qualified Text.Blaze.Svg11 as S
 import qualified Text.Blaze.Svg11.Attributes as A
 
 -- TODO revise if these would be better as diff types eg. Double
 -- TODO add more style options
+-- TODO make strokewidth reasonable
 data Style = IdentityS
         | Fill String
         | Stroke String
@@ -30,14 +32,16 @@ styleR (s0 :*** s1) xs = styleR s1 (styleR s0 xs)
 data Transform = IdentityT
            | Scale Double
            | Rotate Double
+           | Translate Double Double
            | Transform :<+> Transform
-             deriving Read
+             deriving (Read, Show)
 
-transform :: Transform -> [S.Attribute]
-transform t = transformR t []
+transform :: Transform -> S.Attribute
+transform t = A.transform (transformA t)
 
-transformR :: Transform -> [S.Attribute] -> [S.Attribute]
-transformR IdentityT xs = xs
-transformR (Rotate r) xs = xs ++ [A.transform (S.rotate r)]
-transformR (Scale f) xs = xs ++ [A.transform (S.scale f f)]
-transformR (t0 :<+> t1) xs = transformR t1 (transformR t0 xs)
+transformA :: Transform -> S.AttributeValue
+transformA IdentityT = mempty
+transformA (Scale f) = S.scale f f
+transformA (Rotate d) = S.rotate d
+transformA (Translate x y) = S.translate x y
+transformA (t0 :<+> t1) = mappend (transformA t0) (transformA t1)
