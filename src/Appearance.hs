@@ -19,10 +19,9 @@ style (Stroke c) = A.stroke (S.stringValue c)
 style (StrokeWidth w) = A.strokeWidth (S.stringValue (show w))
 style (s0 :*** s1) =  mappend (style s0) (style s1)
 
--- TODO add more transform options
--- TODO non-universal scale
 data Transform = IdentityT
            | Scale Double
+           | ScaleN Double Double
            | Rotate Double
            | Translate Double Double
            | Transform :<+> Transform
@@ -34,6 +33,7 @@ transform t = A.transform (transformA t)
 transformA :: Transform -> S.AttributeValue
 transformA IdentityT = mempty
 transformA (Scale f) = S.scale f f
+transformA (ScaleN fx fy) = S.scale fx fy
 transformA (Rotate d) = S.rotate d
 transformA (Translate x y) = S.translate x y
 transformA (t0 :<+> t1) = mappend (transformA t0) (transformA t1)
