@@ -5,12 +5,10 @@ import Data.Monoid
 import qualified Text.Blaze.Svg11 as S
 import qualified Text.Blaze.Svg11.Attributes as A
 
--- TODO revise if these would be better as diff types eg. Double
--- TODO add more style options
 data Style = IdentityS
         | Fill String
         | Stroke String
-        | StrokeWidth String
+        | StrokeWidth Double
         | Style :*** Style
           deriving (Read, Show)
 
@@ -18,7 +16,7 @@ style :: Style -> S.Attribute
 style IdentityS = mempty
 style (Fill c) = A.fill (S.stringValue c)
 style (Stroke c) = A.stroke (S.stringValue c)
-style (StrokeWidth w) = A.strokeWidth (S.stringValue w)
+style (StrokeWidth w) = A.strokeWidth (S.stringValue (show w))
 style (s0 :*** s1) =  mappend (style s0) (style s1)
 
 -- TODO add more transform options
