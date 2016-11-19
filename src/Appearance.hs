@@ -16,15 +16,12 @@ data Style = IdentityS
         | Style :*** Style
           deriving (Read, Show)
 
-style :: Style -> [S.Attribute]
-style s = styleR s []
-
-styleR :: Style -> [S.Attribute] -> [S.Attribute]
-styleR IdentityS xs = xs
-styleR (Fill c) xs = xs ++ [A.fill (S.stringValue c)]
-styleR (Stroke c) xs = xs ++ [A.stroke (S.stringValue c)]
-styleR (StrokeWidth w) xs = xs ++ [A.strokeWidth (S.stringValue w)]
-styleR (s0 :*** s1) xs = styleR s1 (styleR s0 xs)
+style :: Style -> S.Attribute
+style IdentityS = mempty
+style (Fill c) = A.fill (S.stringValue c)
+style (Stroke c) = A.stroke (S.stringValue c)
+style (StrokeWidth w) = A.strokeWidth (S.stringValue w)
+style (s0 :*** s1) =  mappend (style s0) (style s1)
 
 -- TODO add more transform options
 -- TODO non-universal scale

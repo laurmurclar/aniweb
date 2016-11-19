@@ -18,7 +18,7 @@ shape Circle = S.circle ! A.r "1"
 type Drawing = [(Shape, Style, Transform)]
 
 draw :: Drawing -> S.Svg
-draw d = S.docTypeSvg `withAttributes` [A.version "1.1", A.width "100%", A.height "100%", A.viewbox "0 0 3 2"] $
+draw d = S.docTypeSvg ! A.version "1.1" ! A.width "100%" ! A.height "100%" ! A.viewbox "0 0 3 2" $
             S.g $
                 drawShapes d
 
@@ -27,8 +27,4 @@ drawShapes [d] = shapeToDrawable d
 drawShapes (d:ds) = shapeToDrawable d >> drawShapes ds
 
 shapeToDrawable :: (Shape, Style, Transform) -> S.Svg
-shapeToDrawable (sh, st, tr) = shape sh `withAttributes` (transform tr : style st)
-
-withAttributes :: I.Attributable a => a -> [S.Attribute] -> a
-h `withAttributes` [] = h ! A.width "1" ! A.height "1"
-h `withAttributes` (x:xs) = (h ! x) `withAttributes` xs
+shapeToDrawable (sh, st, tr) = shape sh ! A.width "1" ! A.height "1" ! style st ! transform tr
