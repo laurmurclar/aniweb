@@ -8,10 +8,12 @@ import qualified Text.Blaze.Svg11.Attributes as A
 
 -- TODO add more shapes
 data Shape = Rect
+           | Circle
               deriving (Read, Show)
 
 shape :: Shape -> S.Svg
 shape Rect = S.rect
+shape Circle = S.circle ! A.r "1"
 
 type Drawing = [(Shape, Style, Transform)]
 
