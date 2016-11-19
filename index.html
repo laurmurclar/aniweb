@@ -1,6 +1,21 @@
 <html>
   <head>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <style>
+    .error {
+      opacity: 0;
+    }
+    .visible {
+      background-color: #fc605a;
+      width: 200px;
+      height: 40px;
+      opacity: 1;
+      border-radius: 10px;
+      text-align: center;
+      padding: 15px;
+      margin: 10px;
+    }
+    </style>
   </head>
 
   <body>
@@ -8,10 +23,11 @@
     <p>Enter a description and press enter to see it as an svg</p>
 
     <h3>Suggested Inputs:</h3>
-    <p>[(Rect, Fill "#FF0000" :*** Stroke "#00FF00", Rotate 50.0 :<+> Scale 0.5)]</p>
+    <p>[(Rect, Fill "#FF0000" :*** Stroke "#00FF00", Rotate 50.0 :<+> (Scale 0.5 :<+> Translate 2.0 0.2))]</p>
 
-    <textarea cols=150 rows=3 style="margin: 20px;">
-    </textarea>
+    <textarea cols=150 rows=3 style="margin: 20px;"></textarea>
+
+    <div class="error">Error: Invalid input</div>
 
     <div class="drawing" style="width: 1000px; height: 500px; border: solid 1px;">
     </div>
@@ -19,13 +35,13 @@
     <script>
     $('textarea').on('keypress', function (e) {
       if(e.which === 13){ // Enter
-        //Disable textbox to prevent multiple submit
-        $(this).attr('disabled', 'disabled');
-
         // Post the description to the Shapes endpoint and draw the returned Svg
         $.post('/shapes', { description: $('textarea').val() }, function (response) {
+          $('.error').removeClass("visible");
           $('.drawing').html(response);
-          $('textarea').removeAttr('disabled');
+        })
+        .fail(function() {
+          $('.error').addClass("visible");
         });
       }
     });
